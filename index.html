@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>島嶼三章 — 蘭嶼達悟族民俗植物到海洋信仰的數位策展</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --green: #4A7C59;
+  --blue: #14679B;
+  --brown: #8B5A2B;
+  --ink: #0B1929;
+  --paper: #FAF7F2;
+  --gray: #6B7280;
+  --gold: #D4A857;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+}
+h1, h2, h3 { font-family: 'Noto Serif TC', serif; font-weight: 700; }
+
+/* ============ Hero 區 ============ */
+.hero {
+  height: 100vh;
+  min-height: 600px;
+  background: linear-gradient(180deg, #0B4F6C 0%, #1B6B8A 50%, #14679B 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 30% 40%, rgba(212, 168, 87, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+.hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+  background: linear-gradient(180deg, transparent, var(--paper));
+}
+.hero-content { position: relative; z-index: 2; padding: 0 20px; max-width: 900px; }
+.hero-tag { display: inline-block; padding: 6px 18px; border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px; font-size: 12px; letter-spacing: 3px; margin-bottom: 24px; opacity: 0.8; }
+.hero h1 { font-size: clamp(48px, 8vw, 96px); letter-spacing: 0.3em; margin-bottom: 8px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+.hero .subtitle { font-size: clamp(16px, 2vw, 22px); font-weight: 300;
+  letter-spacing: 0.15em; margin-bottom: 30px; opacity: 0.95; }
+.hero .intro { font-size: 15px; line-height: 2; opacity: 0.85; max-width: 600px; margin: 0 auto 50px; }
+.scroll-hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  z-index: 3; font-size: 13px; letter-spacing: 4px; color: rgba(255,255,255,0.7);
+  animation: bounce 2s infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ============ 章節導覽（互動點 1）============ */
+.chapter-nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250, 247, 242, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px 20px;
+  display: flex; justify-content: center; gap: 30px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  flex-wrap: wrap;
+}
+.chapter-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border: 2px solid transparent;
+  border-radius: 24px; cursor: pointer; background: none;
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  transition: all 0.3s;
+}
+.chapter-btn:hover { background: rgba(0,0,0,0.04); }
+.chapter-btn .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.chapter-btn[data-chapter="1"] .dot { background: var(--green); }
+.chapter-btn[data-chapter="2"] .dot { background: var(--blue); }
+.chapter-btn[data-chapter="3"] .dot { background: var(--brown); }
+
+/* ============ 章節區段 ============ */
+.chapter {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.chapter-header { text-align: center; margin-bottom: 60px; }
+.chapter-num { font-size: 14px; letter-spacing: 6px; color: var(--gray); margin-bottom: 12px; }
+.chapter-title { font-size: clamp(32px, 5vw, 52px); margin-bottom: 16px; }
+.chapter-desc { max-width: 680px; margin: 0 auto; font-size: 16px; color: var(--gray); line-height: 1.9; }
+
+#chapter1 .chapter-title { color: var(--green); }
+#chapter2 .chapter-title { color: var(--blue); }
+#chapter3 .chapter-title { color: var(--brown); }
+
+/* ============ 藏品卡片網格 ============ */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px; margin-top: 40px; }
+.card {
+  background: white; border-radius: 12px; padding: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  cursor: pointer; transition: all 0.3s;
+  border-top: 4px solid var(--green);
+}
+.card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+#chapter1 .card { border-top-color: var(--green); }
+#chapter2 .card { border-top-color: var(--blue); }
+#chapter3 .card { border-top-color: var(--brown); }
+.card-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+.card-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.card-tao { font-size: 13px; color: var(--gray); font-style: italic; margin-bottom: 16px; }
+.card-summary { font-size: 14px; line-height: 1.8; color: #374151; }
+.card-btn { display: inline-block; margin-top: 18px; font-size: 13px;
+  color: var(--gold); font-weight: 600; }
+.card-btn::after { content: ' →'; transition: margin 0.2s; }
+.card:hover .card-btn::after { margin-left: 4px; }
+
+/* ============ Modal（互動點 2）============ */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(11, 25, 41, 0.85);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--paper); border-radius: 16px; max-width: 700px; width: 100%;
+  max-height: 90vh; overflow-y: auto; padding: 40px;
+  position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.modal-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 36px; height: 36px; border: none; background: rgba(0,0,0,0.06);
+  border-radius: 50%; cursor: pointer; font-size: 18px;
+}
+.modal-close:hover { background: rgba(0,0,0,0.12); }
+.modal h2 { font-size: 32px; color: var(--ink); margin-bottom: 4px; }
+.modal .tao { font-size: 14px; color: var(--gray); font-style: italic; margin-bottom: 24px; }
+.modal-meta { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+.modal-meta dl { display: grid; grid-template-columns: 100px 1fr; gap: 8px 16px; font-size: 14px; }
+.modal-meta dt { color: var(--gray); font-weight: 600; }
+.modal-meta dd { color: var(--ink); }
+.modal-meta dd a { color: var(--blue); text-decoration: none; word-break: break-all; }
+.modal-meta dd a:hover { text-decoration: underline; }
+.modal-label { background: white; padding: 24px; border-radius: 8px; border-left: 4px solid var(--gold); }
+.modal-label h3 { font-size: 16px; color: var(--gold); margin-bottom: 12px; }
+.modal-label p { font-size: 15px; line-height: 1.9; color: #1F2937; }
+
+/* ============ 地圖區（互動點 3）============ */
+.map-section {
+  background: linear-gradient(180deg, #0B4F6C 0%, #14679B 100%);
+  color: white; padding: 100px 20px; position: relative;
+}
+.map-container { max-width: 900px; margin: 0 auto; text-align: center; }
+.map-section h2 { font-size: clamp(28px, 4vw, 42px); margin-bottom: 16px; }
+.map-section .map-intro { max-width: 600px; margin: 0 auto 50px; opacity: 0.9; font-size: 15px; line-height: 1.9; }
+.map-svg-wrap { position: relative; display: inline-block; max-width: 600px; width: 100%; }
+.map-svg { width: 100%; height: auto; }
+.map-svg .island { fill: rgba(212, 168, 87, 0.25); stroke: var(--gold); stroke-width: 2; }
+.map-svg .village {
+  fill: white; stroke: var(--gold); stroke-width: 2; cursor: pointer;
+  transition: all 0.2s;
+}
+.map-svg .village:hover { fill: var(--gold); transform: scale(1.3); transform-origin: center; }
+.map-svg .village-label { font-size: 13px; fill: white; font-weight: 600; pointer-events: none; }
+.tooltip {
+  position: absolute; background: white; color: var(--ink);
+  padding: 12px 18px; border-radius: 8px; font-size: 13px;
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3); max-width: 240px;
+  z-index: 20;
+}
+.tooltip.show { opacity: 1; }
+.tooltip strong { display: block; margin-bottom: 4px; color: var(--blue); }
+
+/* ============ 結語 ============ */
+.epilogue { padding: 100px 20px; max-width: 800px; margin: 0 auto; text-align: center; }
+.epilogue h2 { font-size: clamp(28px, 4vw, 44px); color: var(--ink); margin-bottom: 30px; }
+.epilogue p { font-size: 17px; line-height: 2; color: #374151; margin-bottom: 24px; }
+.tk-statement {
+  margin-top: 40px; padding: 24px; background: white; border-radius: 12px;
+  border-left: 4px solid var(--brown); text-align: left; font-size: 13px;
+  color: var(--gray); line-height: 1.8;
+}
+.tk-statement strong { color: var(--brown); }
+
+/* ============ Footer ============ */
+footer { background: var(--ink); color: rgba(255,255,255,0.7); padding: 40px 20px; text-align: center; font-size: 13px; }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* ============ 響應式 ============ */
+@media (max-width: 640px) {
+  .chapter { padding: 50px 16px; }
+  .modal { padding: 24px; }
+  .modal-meta dl { grid-template-columns: 1fr; }
+  .modal-meta dt { margin-top: 8px; }
+  .chapter-nav { gap: 12px; padding: 12px; }
+  .chapter-btn { font-size: 13px; padding: 6px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-tag">DIGITAL CURATION</span>
+    <h1>島 嶼 三 章</h1>
+    <p class="subtitle">Three Chapters of an Island</p>
+    <p class="intro">
+      從蘭嶼採集的植物，到拼板舟的木釘；<br>
+      從海上的航行，到飛魚祭儀中的銀盔——<br>
+      五件達悟族藏品，編織出一個微縮的島嶼宇宙。
+    </p>
+  </div>
+  <div class="scroll-hint">SCROLL ⌄</div>
+</section>
+
+<!-- 章節導覽（互動點 1）-->
+<nav class="chapter-nav">
+  <button class="chapter-btn" data-chapter="1" onclick="document.getElementById('chapter1').scrollIntoView({behavior:'smooth'})">
+    <span class="dot"></span> 第一章 ‧ 植物的智慧
+  </button>
+  <button class="chapter-btn" data-chapter="2" onclick="document.getElementById('chapter2').scrollIntoView({behavior:'smooth'})">
+    <span class="dot"></span> 第二章 ‧ 造舟的工藝
+  </button>
+  <button class="chapter-btn" data-chapter="3" onclick="document.getElementById('chapter3').scrollIntoView({behavior:'smooth'})">
+    <span class="dot"></span> 第三章 ‧ 祭儀的靈魂
+  </button>
+</nav>
+
+<!-- 第一章 -->
+<section id="chapter1" class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 01</div>
+    <h2 class="chapter-title">植物的智慧</h2>
+    <p class="chapter-desc">
+      島上的每一株植物，對達悟族人都不只是植物——它是水、是藥、是陷阱的繩、是孩子的點心，
+      也是造拼板舟的木材。本章從蘭嶼漁人部落採集的三件民俗植物開始，
+      帶你進入達悟族「一物多用」的生態知識體系。
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card" onclick="openModal('water-vine')">
+      <span class="card-icon">🌿</span>
+      <div class="card-name">蘭嶼水藤</div>
+      <div class="card-tao">記錄於 漁人部落 I ra tie</div>
+      <div class="card-summary">砍粗藤可飲水解渴；藤繩作為陷阱的關鍵組件，引誘果子狸沿繩攀爬而落入陷阱，是結合植物利用與狩獵知識的生態技術。</div>
+      <span class="card-btn">展開完整資訊</span>
+    </div>
+    <div class="card" onclick="openModal('ficus')">
+      <span class="card-icon">🍃</span>
+      <div class="card-name">幹花榕</div>
+      <div class="card-tao">記錄於 漁人部落 I ra tie</div>
+      <div class="card-summary">果實汁液或枝幹搗碎外敷，可促進傷口排膿，屬達悟族傳統外用藥；同時果實是設置藤繩陷阱的誘餌節點。其材質禁忌作柴薪。</div>
+      <span class="card-btn">展開完整資訊</span>
+    </div>
+    <div class="card" onclick="openModal('mulberry')">
+      <span class="card-icon">🌳</span>
+      <div class="card-name">小葉桑 <em style="color:var(--gold);font-style:normal">pasek</em></div>
+      <div class="card-tao">記錄於 漁人部落 I ra tie</div>
+      <div class="card-summary">兼具食用、工藝、建築三種用途的關鍵藏品——果實是孩童的點心；木材結實，是拼板舟木釘的材料；大尺寸樹幹則為家屋柱材。</div>
+      <span class="card-btn">展開完整資訊</span>
+    </div>
+  </div>
+</section>
+
+<!-- 第二章 -->
+<section id="chapter2" class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 02</div>
+    <h2 class="chapter-title">造舟的工藝</h2>
+    <p class="chapter-desc">
+      上一章的小葉桑，化作拼板舟船板間的木釘。<br>
+      達悟族——臺灣唯一的航海民族——把陸地的木材，拼組成跨越浪濤的舟艇。
+      憑著口傳與記憶，他們把樹變成船，把陸地變成海洋。
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card" onclick="openModal('boat')" style="grid-column: span 2; max-width: 700px; margin: 0 auto;">
+      <span class="card-icon">⛵</span>
+      <div class="card-name">達悟族木雕拼板舟</div>
+      <div class="card-tao">tatala（小船）／ cinedkeran（大船）</div>
+      <div class="card-summary">
+        達悟族海洋文化的核心象徵。由 21 或 27 塊船板，以木釘、榫頭、繩索拼組而成；
+        船身漆白、紅、黑三色，雕飾人形紋、波浪紋與具神聖意義的「船眼紋」。
+        造船完全憑口傳與記憶，不同部位用不同木種，從取材到下水皆有嚴格儀式。
+      </div>
+      <span class="card-btn">展開完整資訊</span>
+    </div>
+  </div>
+</section>
+
+<!-- 第三章 -->
+<section id="chapter3" class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 03</div>
+    <h2 class="chapter-title">祭儀的靈魂</h2>
+    <p class="chapter-desc">
+      拼板舟下水的那天，男子戴上銀盔；飛魚季開始的那一刻，男子拿銀盔在海邊向海招揮。
+      銀盔之於達悟族，不是裝飾品，而是「擁有靈魂的器物」——
+      整個展覽的最終章，從物質回到信仰。
+    </p>
+  </div>
+  <div class="cards">
+    <div class="card" onclick="openModal('helmet')" style="grid-column: span 2; max-width: 700px; margin: 0 auto;">
+      <span class="card-icon">⚜️</span>
+      <div class="card-name">達悟族銀盔（銀帽）</div>
+      <div class="card-tao">volangat</div>
+      <div class="card-summary">
+        達悟族最神聖的儀式器物，以打薄銀片採「圈繞法」逐圈疊起、銅絲固定成圓錐形。
+        製作須遵守嚴格禁忌以避免惡靈 anito 侵擾，完工時殺豬以血淋盔上，
+        銀盔從此擁有靈魂 paad。僅在新船入水禮、新屋落成及飛魚季佩戴。
+      </div>
+      <span class="card-btn">展開完整資訊</span>
+    </div>
+  </div>
+</section>
+
+<!-- 蘭嶼地圖（互動點 3）-->
+<section class="map-section">
+  <div class="map-container">
+    <h2>蘭嶼六部落 ｜ 滑鼠指向部落了解關聯</h2>
+    <p class="map-intro">
+      蘭嶼島面積約 45 平方公里，環島共分六個傳統部落。本展的三件民俗植物均採集於西南方的<strong style="color:var(--gold)">漁人部落（I ra tie）</strong>；
+      拼板舟與銀盔的工藝則分布於六個部落之間，各有細節差異。
+    </p>
+    <div class="map-svg-wrap">
+      <svg class="map-svg" viewBox="0 0 500 600" xmlns="http://www.w3.org/2000/svg">
+        <!-- 簡化的蘭嶼島輪廓 -->
+        <path class="island" d="M 180,80 Q 280,70 340,120 Q 400,170 410,260 Q 420,360 380,440 Q 340,510 280,540 Q 220,560 160,520 Q 100,470 90,400 Q 80,300 100,220 Q 120,140 180,80 Z"/>
+
+        <!-- 六部落（依實際大致方位）-->
+        <circle class="village" cx="135" cy="450" r="14" data-village="漁人" data-tao="I ra tie"
+                data-info="本展 3 件民俗植物（水藤、幹花榕、小葉桑）皆採於此部落"/>
+        <text class="village-label" x="135" y="485" text-anchor="middle">漁人</text>
+
+        <circle class="village" cx="140" cy="220" r="14" data-village="椰油" data-tao="Yayo"
+                data-info="蘭嶼鄉行政中心；拼板舟造船工藝重鎮"/>
+        <text class="village-label" x="140" y="200" text-anchor="middle">椰油</text>
+
+        <circle class="village" cx="220" cy="520" r="14" data-village="紅頭" data-tao="Imourud"
+                data-info="蘭嶼最南端部落；飛魚季招魚祭主要場域之一"/>
+        <text class="village-label" x="220" y="555" text-anchor="middle">紅頭</text>
+
+        <circle class="village" cx="385" cy="290" r="14" data-village="東清" data-tao="Iranumilek"
+                data-info="日出之地；銀盔工藝傳承部落"/>
+        <text class="village-label" x="385" y="270" text-anchor="middle">東清</text>
+
+        <circle class="village" cx="320" cy="155" r="14" data-village="朗島" data-tao="Iraralay"
+                data-info="蘭嶼北部部落；拼板舟下水禮場域之一"/>
+        <text class="village-label" x="320" y="135" text-anchor="middle">朗島</text>
+
+        <circle class="village" cx="395" cy="395" r="14" data-village="野銀" data-tao="Ivalino"
+                data-info="保留最完整傳統地下屋建築；家屋柱材文化保存重鎮"/>
+        <text class="village-label" x="395" y="430" text-anchor="middle">野銀</text>
+
+        <!-- 方位指示 -->
+        <text x="250" y="60" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="14">N ↑</text>
+      </svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 結語 -->
+<section class="epilogue">
+  <h2>島嶼是一個生命共同體</h2>
+  <p>
+    蘭嶼水藤是「狩獵陷阱的繩」、幹花榕是「陷阱誘餌的果」、小葉桑既是孩童的點心，也是拼板舟的木釘；
+    拼板舟乘載族人於海上馳騁，而銀盔則在下水禮與飛魚祭中喚醒整座島的祝福。
+  </p>
+  <p>
+    這五件藏品從來不是孤立的物件——它們同屬於一個由植物、海洋與信仰織成的島嶼宇宙。
+    當我們把它們重新放在一起，達悟族「萬物皆有靈、萬物環環相扣」的世界觀，便重新被看見。
+  </p>
+  <div class="tk-statement">
+    <strong>達悟族傳統知識聲明</strong><br>
+    本展所引用之達悟族傳統知識均來自台灣公開數位典藏平台與政府官方原住民族資源網。
+    本展為非商業性學術用途；若日後該主題用於商業出版或公開展示，將先取得達悟族相關部落或文史工作者之同意，
+    以符合原住民族傳統知識保護的倫理規範。
+  </div>
+</section>
+
+<footer>
+  © 2026 陳昱辰　1411135046　｜　國立臺中科技大學 資訊管理系　｜　數位典藏管理 W13 期末報告<br>
+  資料來源：<a href="https://catalog.digitalarchives.tw/" target="_blank">數位典藏與數位學習聯合目錄</a>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="modal-name"></h2>
+    <p class="tao" id="modal-tao"></p>
+    <div class="modal-meta">
+      <dl id="modal-meta-list"></dl>
+    </div>
+    <div class="modal-label">
+      <h3>▶ 展板說明（Label Copy）</h3>
+      <p id="modal-label-text"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// 藏品資料庫
+const exhibits = {
+  'water-vine': {
+    name: '蘭嶼水藤',
+    tao: '達悟語名稱未提供 ｜ 採集於 漁人部落 I ra tie',
+    meta: {
+      '識別碼': '系統 ID 18036',
+      '年代': '2011-10-12（建檔日期）',
+      '材質': '藤本植物標本（數位影像）',
+      '典藏機構': '行政院原住民族委員會文化園區管理局',
+      '授權': 'CC BY-NC-SA',
+      '原始連結': 'https://catalog.digitalarchives.tw/item/00/64/d3/97.html',
+    },
+    label: '蘭嶼水藤是達悟族族人結合「植物利用」與「狩獵知識」的代表案例：砍開粗藤可直接飲用其汁液解渴；藤繩搭配五節芒籬笆設置於幹花榕果實附近，可引誘嗜食該果實的果子狸沿繩攀爬而落入陷阱，是一條結合植物學與獵場知識的關鍵節點。'
+  },
+  'ficus': {
+    name: '幹花榕',
+    tao: '達悟語名稱未提供 ｜ 採集於 漁人部落 I ra tie',
+    meta: {
+      '識別碼': '系統 ID 16913',
+      '年代': '2011-10-12（建檔日期）',
+      '材質': '榕屬植物標本（數位影像）',
+      '典藏機構': '行政院原住民族委員會文化園區管理局',
+      '授權': 'CC BY-NC-SA',
+      '原始連結': 'https://catalog.digitalarchives.tw/item/00/64/d2/9f.html',
+    },
+    label: '幹花榕兼具醫療與生態工具兩種角色：族人取其果實汁液或枝幹搗碎後外敷，可促進傷口化膿排膿，屬傳統外用藥；其果實是果子狸喜食的食物，亦成為設置藤繩陷阱的誘餌。其材質禁忌作柴薪，這項禁忌正是部落對植物分類利用的具體展現。'
+  },
+  'mulberry': {
+    name: '小葉桑',
+    tao: '達悟語：pasek ｜ 採集於 漁人部落 I ra tie',
+    meta: {
+      '識別碼': '系統 ID 16915',
+      '年代': '2011-10-11（建檔日期）',
+      '材質': '桑科植物標本（數位影像）',
+      '典藏機構': '行政院原住民族委員會文化園區管理局',
+      '授權': 'CC BY-NC-SA',
+      '原始連結': 'https://catalog.digitalarchives.tw/item/00/64/d2/a1.html',
+    },
+    label: '小葉桑（pasek）是本展中最具「跨章節串連性」的關鍵藏品。果實是長輩採回給孩童的點心；木材結實，被選為製作拼板舟的木釘材料；較大樹幹則作為家屋的柱材。它把達悟族的陸地資源轉化為海洋文化的物質基礎。'
+  },
+  'boat': {
+    name: '達悟族木雕拼板舟',
+    tao: 'tatala（1–3 人小船）／ cinedkeran（6–10 人大船）',
+    meta: {
+      '識別碼': 'item/00/43/3b/63（聯合目錄）',
+      '材質': '多種木材拼組；木釘、榫頭、繩索',
+      '裝飾': '白、紅、黑三色；人形紋、波浪紋、船眼紋',
+      '典藏計畫': '獎補助文史工作者數位典藏計畫（照片類）',
+      '原始連結': 'https://catalog.digitalarchives.tw/item/00/43/3b/63.html',
+    },
+    label: '拼板舟由 21 或 27 塊船板，以木釘、榫頭、繩索拼組而成。船身漆白、紅、黑三色，雕飾人形紋（紀念傳說中教導族人造舟的勇士 Magamaog）、波浪紋與具神聖意義的「船眼紋」。造船完全憑口傳與記憶，從取材到下水皆有嚴格儀式。'
+  },
+  'helmet': {
+    name: '達悟族銀盔（銀帽）',
+    tao: 'volangat',
+    meta: {
+      '識別碼': 'item/00/2f/9a/06（聯合目錄）',
+      '工藝': '打薄銀片採圈繞法、銅絲固定、圓錐形',
+      '佩戴場合': '新船入水禮 ｜ 新屋落成 ｜ 飛魚季',
+      '宗教意義': '經殺豬撥血儀式後具有靈魂 paad',
+      '原始連結': 'https://catalog.digitalarchives.tw/item/00/2f/9a/06.html',
+    },
+    label: '銀盔是達悟族最神聖的儀式器物（達悟族為臺灣唯一具金銀工藝的原住民）。製作須遵守嚴格禁忌以避免惡靈 anito 侵擾；完工時殺豬以血淋盔上，銀盔從此擁有靈魂 paad。飛魚季開始時，男子拿銀盔在海邊揮舞向海招呼，邀請魚群、祈求豐收。'
+  },
+};
+
+// 互動點 2：Modal
+function openModal(id) {
+  const ex = exhibits[id];
+  if (!ex) return;
+  document.getElementById('modal-name').textContent = ex.name;
+  document.getElementById('modal-tao').textContent = ex.tao;
+  const metaList = document.getElementById('modal-meta-list');
+  metaList.innerHTML = '';
+  for (const [k, v] of Object.entries(ex.meta)) {
+    const dt = document.createElement('dt');
+    dt.textContent = k;
+    const dd = document.createElement('dd');
+    if (k === '原始連結') {
+      dd.innerHTML = `<a href="${v}" target="_blank">${v}</a>`;
+    } else {
+      dd.textContent = v;
+    }
+    metaList.appendChild(dt);
+    metaList.appendChild(dd);
+  }
+  document.getElementById('modal-label-text').textContent = ex.label;
+  document.getElementById('modal-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ESC 關閉 Modal
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// 互動點 3：地圖 Tooltip
+const tooltip = document.getElementById('tooltip');
+document.querySelectorAll('.village').forEach(v => {
+  v.addEventListener('mouseenter', (e) => {
+    const village = v.dataset.village;
+    const tao = v.dataset.tao;
+    const info = v.dataset.info;
+    tooltip.innerHTML = `<strong>${village}（${tao}）</strong>${info}`;
+    tooltip.classList.add('show');
+  });
+  v.addEventListener('mousemove', (e) => {
+    const rect = v.ownerSVGElement.getBoundingClientRect();
+    const wrap = v.closest('.map-svg-wrap').getBoundingClientRect();
+    tooltip.style.left = (e.clientX - wrap.left + 20) + 'px';
+    tooltip.style.top = (e.clientY - wrap.top + 20) + 'px';
+  });
+  v.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
