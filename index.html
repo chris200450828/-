@@ -164,14 +164,16 @@ h1, h2, h3 { font-family: 'Noto Serif TC', serif; font-weight: 700; }
 .map-container { max-width: 900px; margin: 0 auto; text-align: center; }
 .map-section h2 { font-size: clamp(28px, 4vw, 42px); margin-bottom: 16px; }
 .map-section .map-intro { max-width: 600px; margin: 0 auto 50px; opacity: 0.9; font-size: 15px; line-height: 1.9; }
-.map-svg-wrap { position: relative; display: inline-block; max-width: 600px; width: 100%; }
-.map-svg { width: 100%; height: auto; }
+.map-svg-wrap { position: relative; display: block; max-width: 600px; width: 100%; margin: 0 auto; }
+.map-svg { width: 100%; height: auto; display: block; aspect-ratio: 500 / 600; }
 .map-svg .island { fill: rgba(212, 168, 87, 0.25); stroke: var(--gold); stroke-width: 2; }
 .map-svg .village {
   fill: white; stroke: var(--gold); stroke-width: 2; cursor: pointer;
   transition: all 0.2s;
+  transform-box: fill-box;
+  transform-origin: center;
 }
-.map-svg .village:hover { fill: var(--gold); transform: scale(1.3); transform-origin: center; }
+.map-svg .village:hover { fill: var(--gold); transform: scale(1.3); }
 .map-svg .village-label { font-size: 13px; fill: white; font-weight: 600; pointer-events: none; }
 .tooltip {
   position: absolute; background: white; color: var(--ink);
@@ -516,25 +518,58 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
-// 互動點 3：地圖 Tooltip
+// 互動點 3：地圖 Tooltip（支援桌面 hover 與手機點擊）
 const tooltip = document.getElementById('tooltip');
+
+function showTooltip(v, clientX, clientY) {
+  const village = v.dataset.village;
+  const tao = v.dataset.tao;
+  const info = v.dataset.info;
+  tooltip.innerHTML = `<strong>${village}（${tao}）</strong>${info}`;
+  tooltip.classList.add('show');
+  positionTooltip(clientX, clientY, v);
+}
+
+function positionTooltip(clientX, clientY, v) {
+  const wrap = v.closest('.map-svg-wrap').getBoundingClientRect();
+  let left = clientX - wrap.left + 20;
+  let top = clientY - wrap.top + 20;
+  // 防止 tooltip 超出右邊界
+  const ttWidth = 240;
+  if (left + ttWidth > wrap.width) {
+    left = clientX - wrap.left - ttWidth - 10;
+  }
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('show');
+}
+
 document.querySelectorAll('.village').forEach(v => {
-  v.addEventListener('mouseenter', (e) => {
-    const village = v.dataset.village;
-    const tao = v.dataset.tao;
-    const info = v.dataset.info;
-    tooltip.innerHTML = `<strong>${village}（${tao}）</strong>${info}`;
-    tooltip.classList.add('show');
+  // 桌面：hover
+  v.addEventListener('mouseenter', (e) => showTooltip(v, e.clientX, e.clientY));
+  v.addEventListener('mousemove', (e) => positionTooltip(e.clientX, e.clientY, v));
+  v.addEventListener('mouseleave', hideTooltip);
+  // 手機：點擊切換
+  v.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (tooltip.classList.contains('show') && tooltip.dataset.active === v.dataset.village) {
+      hideTooltip();
+      tooltip.dataset.active = '';
+    } else {
+      showTooltip(v, e.clientX, e.clientY);
+      tooltip.dataset.active = v.dataset.village;
+    }
   });
-  v.addEventListener('mousemove', (e) => {
-    const rect = v.ownerSVGElement.getBoundingClientRect();
-    const wrap = v.closest('.map-svg-wrap').getBoundingClientRect();
-    tooltip.style.left = (e.clientX - wrap.left + 20) + 'px';
-    tooltip.style.top = (e.clientY - wrap.top + 20) + 'px';
-  });
-  v.addEventListener('mouseleave', () => {
-    tooltip.classList.remove('show');
-  });
+});
+// 手機：點地圖以外區域關閉 tooltip
+document.addEventListener('click', (e) => {
+  if (!e.target.classList.contains('village')) {
+    hideTooltip();
+    tooltip.dataset.active = '';
+  }
 });
 </script>
 
